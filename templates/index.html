@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Mozilla Persona Example</title>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <!-- TODO: Include the Persona polyfill -->
+  </head>
+  <body>
+    <p>
+      {% if session.email %}
+        You are currently logged in as {{ session.email }}.
+        <a href="#" id="logoutBtn">Sign Out</a>
+      {% else %}
+        You are not currently logged in.
+        <a href="#" id="loginBtn">Sign In</a>
+      {% endif %}
+    </p>
+    <script type="text/javascript">
+// TODO: Hook up navigator.id.* functions to login and logout button clicks
+
+
+// TODO: Call navigator.id.watch() to configure Persona
+
+
+    </script>
+  </body>
+</html>
