@@ -14,14 +14,24 @@ def index():
 
 @app.route("/login", methods=["POST"])
 def login():
-    # Verify assertion and then set a secure session cookie
-    pass
+    # Send the assertion to Mozilla's verifier service
+    data = {"assertion": request.form["assertion"],
+            "audience": "http://localhost:5000"}
+    resp = post("https://verifier.login.persona.org/verify",
+                data=data)
+    info = resp.json()
+
+    if info["status"] != "okay":
+        abort(403)
+
+    session["email"] = info["email"]
+    return Response(status=204)
 
 
 @app.route("/logout", methods=["POST"])
 def logout():
-    # Destroy user's session cookie
-    pass
+    session.clear()
+    return Response(status=204)
 
 
 if __name__ == '__main__':

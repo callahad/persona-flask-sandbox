@@ -3,7 +3,7 @@
   <head>
     <title>Mozilla Persona Example</title>
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <!-- TODO: Include the Persona polyfill -->
+    <script src="https://login.persona.org/include.js"></script>
   </head>
   <body>
     <p>
@@ -16,12 +16,23 @@
       {% endif %}
     </p>
     <script type="text/javascript">
-// TODO: Hook up navigator.id.* functions to login and logout button clicks
+$('#loginBtn').click( function () { navigator.id.request(); } );
+$('#logoutBtn').click( function () { navigator.id.logout(); } );
 
-
-// TODO: Call navigator.id.watch() to configure Persona
-
-
+navigator.id.watch({
+  loggedInUser: "{{ session.email }}" || null,
+  onlogin: function (assertion) {
+    // A user wants to log in! Send the assertion to my backend.
+    $.post("/login", {"assertion": assertion})
+    .done(function () { window.location.reload(); })
+    .fail(function () { navigator.id.logout(); });
+  },
+  onlogout: function () {
+    // A user has logged out! Tear down their session.
+    $.post("/logout")
+    .always(function () { window.location.reload(); });
+  }
+});
     </script>
   </body>
 </html>
